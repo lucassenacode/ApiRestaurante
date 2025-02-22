@@ -9,6 +9,10 @@ namespace ApiRestaurante.Services.Service
     public interface IProdutoService
     {
         List<Produto> ListarProdutos();
+        void InserirProduto(Produto produto);
+        void AtualizarProduto(Produto produto);
+
+        void DeletarProduto(int idProdduto);
 
     }
 }

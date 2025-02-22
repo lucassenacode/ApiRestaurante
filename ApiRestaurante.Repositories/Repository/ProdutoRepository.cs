@@ -25,16 +25,76 @@ namespace ApiRestaurante.Repositories.Repository
                             IdProduto = Convert.ToInt32(rdr["IdProduto"]),
                             NomeProduto = Convert.ToString(rdr["NomeProduto"]),
                             Preco = Convert.ToDecimal(rdr["Preco"]),
-                            TipoProduto = (TipoProduto)Enum.Parse(typeof(TipoProduto), Convert.ToString(rdr["TipoProduto"])) // Análise direta
+                            TipoProduto = (TipoProduto)Enum.Parse(typeof(TipoProduto), Convert.ToString(rdr["TipoProduto"]))
                         };
 
                         produtos.Add(produto);
                     }
-
                     return produtos;
+                }
+            }
+        }
+
+        public void InserirProduto(Produto produto)
+        {
+
+            string comandosql = @"INSERT INTO Produto(NomeProduto, Preco, 
+            TipoProduto) VALUES (@NomeProduto, @Preco, @TipoProduto);";
+
+            using (var cmd = new MySqlCommand(comandosql, _conn))
+            {
+                cmd.Parameters.AddWithValue("@NomeProduto", produto.NomeProduto);
+                cmd.Parameters.AddWithValue("@Preco", produto.Preco);
+                cmd.Parameters.AddWithValue("@TipoProduto", produto.TipoProduto);
+                cmd.ExecuteNonQuery();
+
+            }
+        }
+
+        public bool ProdutoExiste(int idProdduto)
+        {
+
+            string comandosql = @"SELECT COUNT(*) FROM Produto WHERE IdProduto = @IDProduto";
+
+            using (var cmd = new MySqlCommand(comandosql, _conn))
+            {
+                cmd.Parameters.AddWithValue("@IdProduto", idProdduto);
+                return Convert.ToBoolean(cmd.ExecuteScalar());
+            }
+        }
+
+        public void AtualizarProduto(Produto produto)
+        {
+            string comandosql = @"UPDATE Produto SET
+                                    NomeProduto = @NomeProduto,
+                                    Preco = @Preco,
+                                    TipoProduto = @TipoProduto
+                                WHERE IdProduto = @IdProduto";
+
+            using (var cmd = new MySqlCommand(comandosql, _conn))
+            {
+                cmd.Parameters.AddWithValue("@IdProduto", produto.IdProduto);
+                cmd.Parameters.AddWithValue("@NomeProduto", produto.NomeProduto);
+                cmd.Parameters.AddWithValue("@Preco", produto.Preco);
+                cmd.Parameters.AddWithValue("@TipoProduto", produto.TipoProduto.ToString());
+                cmd.ExecuteNonQuery();
+
+            }
+        }
+
+        public void DeletarProduto(int idProdduto)
+        {
+            string comandosql = @"DELETE FROM Produto WHERE IdProduto = @IdProduto";
+
+            using (var cmd = new MySqlCommand(comandosql, _conn))
+            {
+                cmd.Parameters.AddWithValue("@IdProduto", idProdduto);
+
+                if (cmd.ExecuteNonQuery() == 0)
+                {
+                    throw new InvalidOperationException($"Nenhum produto afetado para esse {idProdduto}.");
                 }
             }
         }
     }
 }
-

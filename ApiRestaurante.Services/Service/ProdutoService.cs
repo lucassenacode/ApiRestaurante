@@ -25,5 +25,54 @@ namespace ApiRestaurante.Services.Service
                 ((Contexto)_repositorio).FecharConexao();
             }
         }
+
+        public void InserirProduto(Produto produto)
+        {
+            try
+            {
+                ((Contexto)_repositorio).AbrirConexao();
+                _repositorio.InserirProduto(produto);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+
+        public void AtualizarProduto(Produto produto)
+        {
+
+            try
+            {
+                ((Contexto)_repositorio).AbrirConexao();
+
+                if (!_repositorio.ProdutoExiste(produto.IdProduto))
+                {
+                    throw new Exception($"Produto de ID: {produto.IdProduto} não encontrado");
+                }
+                _repositorio.AtualizarProduto(produto);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+
+        public void DeletarProduto(int idProduto)
+        {
+            try
+            {
+                ((Contexto)_repositorio).AbrirConexao();
+                if (!_repositorio.ProdutoExiste(idProduto))
+                {
+                    throw new Exception($"Produto de ID: {idProduto} não encontrado");
+                }
+                _repositorio.DeletarProduto(idProduto);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
     }
 }
