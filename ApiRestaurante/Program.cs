@@ -16,6 +16,12 @@ public class Program
 
         builder.Services.AddScoped<ApiRestaurante.Services.Service.IProdutoService, ApiRestaurante.Services.Service.ProdutoService>();
         builder.Services.AddScoped<ApiRestaurante.Repositories.Repository.IProdutoRepository, ApiRestaurante.Repositories.Repository.ProdutoRepository>();
+
+        builder.Services.AddScoped<ApiRestaurante.Services.Service.IPedidoService, ApiRestaurante.Services.Service.PedidoService>();
+        builder.Services.AddScoped<ApiRestaurante.Repositories.Repository.IPedidoRepository, ApiRestaurante.Repositories.Repository.PedidoRepository>();
+
+        builder.Services.AddScoped<ApiRestaurante.Services.Service.IItemPedidoService, ApiRestaurante.Services.Service.ItemPedidoService>();
+        builder.Services.AddScoped<ApiRestaurante.Repositories.Repository.IItemPedidoRepository, ApiRestaurante.Repositories.Repository.ItemPedidoRepository>();
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.

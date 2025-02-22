@@ -51,14 +51,14 @@ namespace ApiRestaurante.Repositories.Repository
             }
         }
 
-        public bool ProdutoExiste(int idProdduto)
+        public bool ProdutoExiste(int idProduto)
         {
 
             string comandosql = @"SELECT COUNT(*) FROM Produto WHERE IdProduto = @IDProduto";
 
             using (var cmd = new MySqlCommand(comandosql, _conn))
             {
-                cmd.Parameters.AddWithValue("@IdProduto", idProdduto);
+                cmd.Parameters.AddWithValue("@IdProduto", idProduto);
                 return Convert.ToBoolean(cmd.ExecuteScalar());
             }
         }
@@ -82,17 +82,17 @@ namespace ApiRestaurante.Repositories.Repository
             }
         }
 
-        public void DeletarProduto(int idProdduto)
+        public void DeletarProduto(int idProduto)
         {
             string comandosql = @"DELETE FROM Produto WHERE IdProduto = @IdProduto";
 
             using (var cmd = new MySqlCommand(comandosql, _conn))
             {
-                cmd.Parameters.AddWithValue("@IdProduto", idProdduto);
+                cmd.Parameters.AddWithValue("@IdProduto", idProduto);
 
                 if (cmd.ExecuteNonQuery() == 0)
                 {
-                    throw new InvalidOperationException($"Nenhum produto afetado para esse {idProdduto}.");
+                    throw new InvalidOperationException($"Nenhum produto afetado para esse {idProduto}.");
                 }
             }
         }
