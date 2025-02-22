@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ApiRestaurante.Domain\ApiRestaurante.Domain.csproj" />
+    <ProjectReference Include="..\ApiRestaurante.Repositories\ApiRestaurante.Repositories.csproj" />
+  </ItemGroup>
+
 </Project>

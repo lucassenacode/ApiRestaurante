@@ -1,6 +1,6 @@
 -- Criação Tabela Produto
 CREATE TABLE Produto (
-    IdProduto INT AUTO_INCREMENT PRIMARY KEY,
+	IdProduto INT AUTO_INCREMENT PRIMARY KEY,
     NomeProduto VARCHAR(100) NOT NULL,       
     Preco DECIMAL(15, 2) NOT NULL,           
     TipoProduto ENUM('Comida', 'Bebida') NOT NULL 

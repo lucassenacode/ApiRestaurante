@@ -14,6 +14,8 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        builder.Services.AddScoped<ApiRestaurante.Services.Service.IProdutoService, ApiRestaurante.Services.Service.ProdutoService>();
+        builder.Services.AddScoped<ApiRestaurante.Repositories.Repository.IProdutoRepository, ApiRestaurante.Repositories.Repository.ProdutoRepository>();
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
