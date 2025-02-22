@@ -1,4 +1,3 @@
-
 namespace ApiRestaurante;
 
 public class Program
@@ -9,7 +8,13 @@ public class Program
 
         // Add services to the container.
 
-        builder.Services.AddControllers();
+        builder.Services.AddControllers()
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                options.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -22,6 +27,7 @@ public class Program
 
         builder.Services.AddScoped<ApiRestaurante.Services.Service.IItemPedidoService, ApiRestaurante.Services.Service.ItemPedidoService>();
         builder.Services.AddScoped<ApiRestaurante.Repositories.Repository.IItemPedidoRepository, ApiRestaurante.Repositories.Repository.ItemPedidoRepository>();
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -34,7 +40,6 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseAuthorization();
-
 
         app.MapControllers();
 

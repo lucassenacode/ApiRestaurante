@@ -18,6 +18,8 @@ namespace ApiRestaurante.Repositories.Repository
         void AtualizarProduto(Produto produto);
 
         void DeletarProduto(int idProdduto);
+
+        Produto ObterProdutoPorId(int idProduto);
     }
 
 }
