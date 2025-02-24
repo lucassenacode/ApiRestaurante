@@ -10,5 +10,8 @@ namespace ApiRestaurante.Repositories.Repository
     {
         void InserirItemPedido(ItemPedido item);
         List<ItemPedido> ListarItensPorPedido(int pedidoId);
+        List<ItemPedido> ListarItensPedidoPorPedidoId(int pedidoId);
+        void AtualizarItemPedido(ItemPedido item);
+        void RemoverItemPedido(int id);
     }
 }

@@ -10,16 +10,11 @@ namespace ApiRestaurante.Repositories.Repository
     public interface IProdutoRepository
     {
         List<Produto> ListarProdutos();
-
-        void CriarProduto(Produto produto);
-
-        bool ProdutoExiste(int idProdduto);
-
-        void AtualizarProduto(Produto produto);
-
-        void DeletarProduto(int idProdduto);
-
         Produto ObterProdutoPorId(int idProduto);
+        void CriarProduto(Produto produto);
+        void AtualizarProduto(Produto produto);
+        void DeletarProduto(int idProdduto);
+        bool ProdutoExiste(int idProdduto);
     }
 
 }

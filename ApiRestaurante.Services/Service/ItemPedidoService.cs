@@ -30,12 +30,12 @@ namespace ApiRestaurante.Services.Service
             }
         }
 
-        public List<ItemPedido> ListarItensPorPedido(int pedidoId)
+        public List<ItemPedido> ListarItensPedidoPorPedidoId(int pedidoId)
         {
             ((Contexto)_repositorio).AbrirConexao();
             try
             {
-                return _repositorio.ListarItensPorPedido(pedidoId);
+                return _repositorio.ListarItensPedidoPorPedidoId(pedidoId);
             }
             finally
             {
@@ -43,5 +43,30 @@ namespace ApiRestaurante.Services.Service
             }
         }
 
+        public void AtualizarItemPedido(ItemPedido item)
+        {
+            ((Contexto)_repositorio).AbrirConexao();
+            try
+            {
+                _repositorio.AtualizarItemPedido(item);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+
+        public void RemoverItemPedido(int id)
+        {
+            ((Contexto)_repositorio).AbrirConexao();
+            try
+            {
+                _repositorio.RemoverItemPedido(id);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
     }
 }
