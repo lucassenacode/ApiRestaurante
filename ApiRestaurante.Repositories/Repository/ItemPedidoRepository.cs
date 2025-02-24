@@ -1,11 +1,15 @@
 using ApiRestaurante.Domain.Models;
 using ApiRestaurante.Domain.Models.Enuns;
+using Microsoft.Extensions.Configuration; // Adicione esta linha
 using MySql.Data.MySqlClient;
 
 namespace ApiRestaurante.Repositories.Repository
 {
     public class ItemPedidoRepository : Contexto, IItemPedidoRepository
     {
+        public ItemPedidoRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
         public void InserirItemPedido(ItemPedido item)
         {
             string comandosql = @"INSERT INTO ItemPedido (IdPedido, IdProduto, Quantidade)

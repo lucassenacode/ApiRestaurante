@@ -2,7 +2,7 @@ namespace ApiRestaurante.Domain.Models.Enuns
 {
     public enum TipoProduto
     {
-        Comida,
-        Bebida
+        Comida = 1,
+        Bebida = 2
     }
 }

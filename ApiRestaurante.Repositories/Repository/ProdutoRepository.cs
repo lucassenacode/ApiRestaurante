@@ -1,13 +1,18 @@
-
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using ApiRestaurante.Domain.Models;
 using ApiRestaurante.Domain.Models.Enuns;
+using Microsoft.Extensions.Configuration; // Adicione esta linha
 using MySql.Data.MySqlClient;
-using Org.BouncyCastle.Cms;
 
 namespace ApiRestaurante.Repositories.Repository
 {
     public class ProdutoRepository : Contexto, IProdutoRepository
     {
+        public ProdutoRepository(IConfiguration configuration) : base(configuration)
+        {
+        }
         public List<Produto> ListarProdutos()
         {
             string comandosql = @"SELECT IdProduto, NomeProduto, Preco, TipoProduto FROM Produto";
@@ -35,7 +40,7 @@ namespace ApiRestaurante.Repositories.Repository
             }
         }
 
-        public void InserirProduto(Produto produto)
+        public void CriarProduto(Produto produto)
         {
 
             string comandosql = @"INSERT INTO Produto(NomeProduto, Preco, 
@@ -48,18 +53,6 @@ namespace ApiRestaurante.Repositories.Repository
                 cmd.Parameters.AddWithValue("@TipoProduto", produto.TipoProduto);
                 cmd.ExecuteNonQuery();
 
-            }
-        }
-
-        public bool ProdutoExiste(int idProduto)
-        {
-
-            string comandosql = @"SELECT COUNT(*) FROM Produto WHERE IdProduto = @IDProduto";
-
-            using (var cmd = new MySqlCommand(comandosql, _conn))
-            {
-                cmd.Parameters.AddWithValue("@IdProduto", idProduto);
-                return Convert.ToBoolean(cmd.ExecuteScalar());
             }
         }
 
@@ -119,6 +112,18 @@ namespace ApiRestaurante.Repositories.Repository
                     }
                     return null;
                 }
+            }
+        }
+
+        public bool ProdutoExiste(int idProduto)
+        {
+
+            string comandosql = @"SELECT COUNT(*) FROM Produto WHERE IdProduto = @IDProduto";
+
+            using (var cmd = new MySqlCommand(comandosql, _conn))
+            {
+                cmd.Parameters.AddWithValue("@IdProduto", idProduto);
+                return Convert.ToBoolean(cmd.ExecuteScalar());
             }
         }
     }

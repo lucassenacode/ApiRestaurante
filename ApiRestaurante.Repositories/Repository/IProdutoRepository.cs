@@ -11,7 +11,7 @@ namespace ApiRestaurante.Repositories.Repository
     {
         List<Produto> ListarProdutos();
 
-        void InserirProduto(Produto produto);
+        void CriarProduto(Produto produto);
 
         bool ProdutoExiste(int idProdduto);
 

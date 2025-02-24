@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ApiRestaurante.Domain.Models;
+using ApiRestaurante.Domain.Models.Enuns;
 using ApiRestaurante.Repositories.Repository;
 
 namespace ApiRestaurante.Services.Service
@@ -21,6 +22,31 @@ namespace ApiRestaurante.Services.Service
             _produtoRepository = produtoRepository;
         }
 
+        public List<Pedido> ListarPedidos()
+        {
+            ((Contexto)_repositorio).AbrirConexao();
+            try
+            {
+                return _repositorio.ListarPedidos();
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+
+        public Pedido ObterPedidoPorId(int idPedido)
+        {
+            try
+            {
+                ((Contexto)_repositorio).AbrirConexao();
+                return _repositorio.ObterPedidoPorId(idPedido);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
         public int CriarPedido(Pedido pedido)
         {
             ((Contexto)_repositorio).AbrirConexao();
@@ -52,16 +78,86 @@ namespace ApiRestaurante.Services.Service
             {
                 ((Contexto)_repositorio).FecharConexao();
                 ((Contexto)_produtoRepository).FecharConexao();
-                ((Contexto)_itemPedidoRepository).FecharConexao(); // Adicionar esta linha
+                ((Contexto)_itemPedidoRepository).FecharConexao();
             }
         }
 
-        public List<Pedido> ListarPedidos()
+        public void AtualizarPedido(Pedido pedido)
+        {
+
+            try
+            {
+                ((Contexto)_repositorio).AbrirConexao();
+
+                if (!_repositorio.PedidoExiste(pedido.IdPedido))
+                {
+                    throw new Exception($"Produto de ID: {pedido.IdPedido} não encontrado");
+                }
+                _repositorio.AtualizarPedido(pedido);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+        public void DeletarPedido(int idPedido)
+        {
+            try
+            {
+                ((Contexto)_repositorio).AbrirConexao();
+                if (!_repositorio.PedidoExiste(idPedido))
+                {
+                    throw new Exception($"Produto de ID: {idPedido} não encontrado");
+                }
+                _repositorio.DeletarPedido(idPedido);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+        public void AtualizarStatusPedido(int id, StatusPedido novoStatus)
         {
             ((Contexto)_repositorio).AbrirConexao();
             try
             {
-                return _repositorio.ListarPedidos();
+                _repositorio.AtualizarStatusPedido(id, novoStatus);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+        public List<Pedido> ObterPedidosPorStatus(StatusPedido status)
+        {
+            ((Contexto)_repositorio).AbrirConexao();
+            try
+            {
+                return _repositorio.ObterPedidosPorStatus(status);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+        public List<Pedido> ObterPedidosPorSetor(string setor)
+        {
+            ((Contexto)_repositorio).AbrirConexao();
+            try
+            {
+                return _repositorio.ObterPedidosPorSetor(setor);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+        public bool PedidoExiste(int id)
+        {
+            ((Contexto)_repositorio).AbrirConexao();
+            try
+            {
+                return _repositorio.PedidoExiste(id);
             }
             finally
             {

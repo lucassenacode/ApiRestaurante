@@ -1,9 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using ApiRestaurante.Domain.Models;
-using ApiRestaurante.Services;
 using ApiRestaurante.Services.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,29 +19,94 @@ namespace ApiRestaurante.Controllers
         public IActionResult ListarProdutos()
         {
             var produtos = _produtoService.ListarProdutos();
-            return StatusCode(200, produtos);
+            return Ok(produtos);
+        }
+
+        [HttpGet("restaurante/produto/{id}")]
+        public IActionResult ObterProdutoPorId([FromRoute] int id)
+        {
+            try
+            {
+                var produto = _produtoService.ObterProdutoPorId(id);
+                if (produto == null)
+                {
+                    return NotFound();
+                }
+                return Ok(produto);
+            }
+            catch (Exception ex)
+            {
+                // Logar a exceção
+                return StatusCode(500, "Erro interno do servidor.");
+            }
         }
 
         [HttpPost("restaurante/produto")]
-        public IActionResult InserirProduto([FromBody] Produto produto)
+        public IActionResult CriarProduto([FromBody] Produto produto)
         {
-            _produtoService.InserirProduto(produto);
-            return StatusCode(201);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            try
+            {
+                _produtoService.CriarProduto(produto);
+                return CreatedAtAction(nameof(ObterProdutoPorId), new { id = produto.IdProduto }, produto);
+            }
+            catch (Exception ex)
+            {
+                // Logar a exceção
+                return StatusCode(500, "Erro interno do servidor.");
+            }
         }
 
-        [HttpPut("restaurante/produto/")]
-        public IActionResult AtualizarProduto([FromBody] Produto produto)
+        [HttpPut("restaurante/produto/{id}")]
+        public IActionResult AtualizarProduto([FromRoute] int id, [FromBody] Produto produto)
         {
-            _produtoService.AtualizarProduto(produto);
-            return StatusCode(201);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            if (id != produto.IdProduto)
+            {
+                return BadRequest("O ID do produto na rota não corresponde ao ID no corpo da solicitação.");
+            }
+
+            try
+            {
+                _produtoService.AtualizarProduto(produto);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                // Logar a exceção
+                return StatusCode(500, "Erro interno do servidor.");
+            }
         }
 
-        [HttpDelete("restaurante/produto/")]
-        public IActionResult DeletarProduto(int idProdduto)
+        [HttpDelete("restaurante/produto/{id}")]
+        public IActionResult DeletarProduto([FromRoute] int id)
         {
-            _produtoService.DeletarProduto(idProdduto);
-            return StatusCode(200);
+            try
+            {
+                _produtoService.DeletarProduto(id);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+
+                return StatusCode(500, "Erro interno do servidor.");
+            }
         }
     }
-
 }

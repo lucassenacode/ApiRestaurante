@@ -1,19 +1,18 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 
 namespace ApiRestaurante.Repositories.Repository
 {
-    public class Contexto
+    public class Contexto : IDisposable
     {
         internal readonly MySqlConnection _conn;
+        private readonly IConfiguration _configuration;
 
-        public Contexto()
+        public Contexto(IConfiguration configuration)
         {
-            // String de conexão com o banco de dados
-            string connectionString = "Server=sql10.freesqldatabase.com;Database=sql10763453;User Id=sql10763453;Password=gJ17hUSBpv;Port=3306;";
+            _configuration = configuration;
+            string connectionString = _configuration.GetConnectionString("MySqlConnection");
             _conn = new MySqlConnection(connectionString);
         }
 
@@ -30,6 +29,18 @@ namespace ApiRestaurante.Repositories.Repository
             if (_conn.State == System.Data.ConnectionState.Open)
             {
                 _conn.Close();
+            }
+        }
+
+        public void Dispose()
+        {
+            if (_conn != null)
+            {
+                if (_conn.State == System.Data.ConnectionState.Open)
+                {
+                    _conn.Close();
+                }
+                _conn.Dispose();
             }
         }
     }

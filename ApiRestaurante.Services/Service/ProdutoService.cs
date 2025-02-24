@@ -1,69 +1,91 @@
-public class ProdutoService : IProdutoService
+using System.Collections.Generic;
+using ApiRestaurante.Domain.Models;
+using ApiRestaurante.Repositories.Repository;
+using ApiRestaurante.Services.Service;
+
+namespace ApiRestaurante.Services.Service
 {
-    private readonly IProdutoRepository _repositorio;
-
-    public void InserirProduto(Produto produto)
+    public class ProdutoService : IProdutoService
     {
-        if (produto == null)
-            throw new ArgumentNullException(nameof(produto));
-
-        try
+        private readonly IProdutoRepository _repositorio;
+        public ProdutoService(IProdutoRepository repositorio)
         {
-            ((Contexto)_repositorio).AbrirConexao();
-            // Validar se já existe produto com mesmo nome
-            var produtoExistente = _repositorio.ObterProdutoPorNome(produto.NomeProduto);
-            if (produtoExistente != null)
+            _repositorio = repositorio;
+        }
+
+        public List<Produto> ListarProdutos()
+        {
+            try
             {
-                throw new Exception($"Já existe um produto com o nome: {produto.NomeProduto}");
+                ((Contexto)_repositorio).AbrirConexao();
+                return _repositorio.ListarProdutos();
             }
-            _repositorio.InserirProduto(produto);
-        }
-        finally
-        {
-            ((Contexto)_repositorio).FecharConexao();
-        }
-    }
-
-    public void AtualizarProduto(Produto produto)
-    {
-        if (produto == null)
-            throw new ArgumentNullException(nameof(produto));
-
-        try
-        {
-            ((Contexto)_repositorio).AbrirConexao();
-            // Validar se produto existe
-            if (!_repositorio.ProdutoExiste(produto.IdProduto))
+            finally
             {
-                throw new Exception($"Produto de ID: {produto.IdProduto} não encontrado");
+                ((Contexto)_repositorio).FecharConexao();
             }
-            // Validar se novo nome não conflita com outro produto
-            var produtoExistente = _repositorio.ObterProdutoPorNome(produto.NomeProduto);
-            if (produtoExistente != null && produtoExistente.IdProduto != produto.IdProduto)
-            {
-                throw new Exception($"Já existe outro produto com o nome: {produto.NomeProduto}");
-            }
-            _repositorio.AtualizarProduto(produto);
         }
-        finally
-        {
-            ((Contexto)_repositorio).FecharConexao();
-        }
-    }
 
-    public Produto ObterProdutoPorId(int idProduto)
-    {
-        try
+        public Produto ObterProdutoPorId(int idProduto)
         {
-            ((Contexto)_repositorio).AbrirConexao();
-            var produto = _repositorio.ObterProdutoPorId(idProduto);
-            if (produto == null)
-                throw new Exception($"Produto de ID: {idProduto} não encontrado");
-            return produto;
+            try
+            {
+                ((Contexto)_repositorio).AbrirConexao();
+                return _repositorio.ObterProdutoPorId(idProduto);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
         }
-        finally
+
+        public void CriarProduto(Produto produto)
         {
-            ((Contexto)_repositorio).FecharConexao();
+            try
+            {
+                ((Contexto)_repositorio).AbrirConexao();
+                _repositorio.CriarProduto(produto);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+
+        public void AtualizarProduto(Produto produto)
+        {
+
+            try
+            {
+                ((Contexto)_repositorio).AbrirConexao();
+
+                if (!_repositorio.ProdutoExiste(produto.IdProduto))
+                {
+                    throw new Exception($"Produto de ID: {produto.IdProduto} não encontrado");
+                }
+                _repositorio.AtualizarProduto(produto);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+
+        public void DeletarProduto(int idProduto)
+        {
+            try
+            {
+                ((Contexto)_repositorio).AbrirConexao();
+                if (!_repositorio.ProdutoExiste(idProduto))
+                {
+                    throw new Exception($"Produto de ID: {idProduto} não encontrado");
+                }
+                _repositorio.DeletarProduto(idProduto);
+            }
+            finally
+            {
+                ((Contexto)_repositorio).FecharConexao();
+            }
         }
     }
 }
