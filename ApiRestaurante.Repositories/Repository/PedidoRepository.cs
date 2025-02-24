@@ -207,5 +207,57 @@ namespace ApiRestaurante.Repositories.Repository
                 return Convert.ToBoolean(cmd.ExecuteScalar());
             }
         }
+        public List<Pedido> ObterPedidosFinalizados()
+        {
+            string comandosql = @"SELECT p.IdPedido, p.NomeCliente, p.NumeroMesa, p.Status, p.CriadoEm,
+                                    i.IdItemPedido, i.IdProduto, i.Quantidade,
+                                    pr.NomeProduto, pr.Preco, pr.TipoProduto
+                                FROM Pedido p
+                                JOIN ItemPedido i ON p.IdPedido = i.IdPedido
+                                JOIN Produto pr ON i.IdProduto = pr.IdProduto
+                                WHERE p.Status = @Status";
+
+            using (var cmd = new MySqlCommand(comandosql, _conn))
+            {
+                cmd.Parameters.AddWithValue("@Status", StatusPedido.Entregue.ToString());
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    var pedidos = new Dictionary<int, Pedido>();
+                    while (rdr.Read())
+                    {
+                        int pedidoId = Convert.ToInt32(rdr["IdPedido"]);
+                        if (!pedidos.ContainsKey(pedidoId))
+                        {
+                            pedidos[pedidoId] = new Pedido
+                            {
+                                IdPedido = pedidoId,
+                                NomeCliente = rdr["NomeCliente"].ToString(),
+                                NumeroMesa = Convert.ToInt32(rdr["NumeroMesa"]),
+                                Status = (StatusPedido)Enum.Parse(typeof(StatusPedido), rdr["Status"].ToString()),
+                                CriadoEm = Convert.ToDateTime(rdr["CriadoEm"])
+                            };
+                        }
+
+                        var itemPedido = new ItemPedido
+                        {
+                            IdItemPedido = Convert.ToInt32(rdr["IdItemPedido"]),
+                            IdPedido = pedidoId,
+                            IdProduto = Convert.ToInt32(rdr["IdProduto"]),
+                            Produto = new Produto
+                            {
+                                IdProduto = Convert.ToInt32(rdr["IdProduto"]),
+                                NomeProduto = rdr["NomeProduto"].ToString(),
+                                Preco = Convert.ToDecimal(rdr["Preco"]),
+                                TipoProduto = (TipoProduto)Enum.Parse(typeof(TipoProduto), rdr["TipoProduto"].ToString())
+                            },
+                            Quantidade = Convert.ToInt32(rdr["Quantidade"])
+                        };
+
+                        pedidos[pedidoId].Itens.Add(itemPedido);
+                    }
+                    return pedidos.Values.ToList();
+                }
+            }
+        }
     }
 }

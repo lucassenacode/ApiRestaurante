@@ -82,27 +82,25 @@ namespace ApiRestaurante.Controllers
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }
-        [HttpGet("restaurante/pedidos/status/{status}")]
-        public IActionResult ObterPedidosPorStatus([FromRoute] StatusPedido status)
+
+
+        [HttpGet("restaurante/pedidos/copa")]
+        public IActionResult ListarPedidosCopa()
         {
             try
             {
-                var pedidos = _pedidoService.ObterPedidosPorStatus(status);
-                return Ok(pedidos);
-            }
-            catch (Exception ex)
-            {
-                // Logar a exceção
-                return StatusCode(500, "Erro interno do servidor.");
-            }
-        }
-        [HttpGet("restaurante/pedidos/setor/{setor}")]
-        public IActionResult ObterPedidosPorSetor([FromRoute] string setor)
-        {
-            try
-            {
-                var pedidos = _pedidoService.ObterPedidosPorSetor(setor);
-                return Ok(pedidos);
+                var pedidos = _pedidoService.ListarPedidos();
+                var pedidosCopa = pedidos.Select(p => new
+                {
+                    p.IdPedido,
+                    p.NomeCliente,
+                    p.NumeroMesa,
+                    p.Status,
+                    p.CriadoEm,
+                    Itens = p.ItensCopa
+                }).Where(p => p.Itens.Any()).ToList();
+
+                return Ok(pedidosCopa);
             }
             catch (Exception ex)
             {
@@ -111,5 +109,44 @@ namespace ApiRestaurante.Controllers
             }
         }
 
+        [HttpGet("restaurante/pedidos/cozinha")]
+        public IActionResult ListarPedidosCozinha()
+        {
+            try
+            {
+                var pedidos = _pedidoService.ListarPedidos();
+                var pedidosCozinha = pedidos.Select(p => new
+                {
+                    p.IdPedido,
+                    p.NomeCliente,
+                    p.NumeroMesa,
+                    p.Status,
+                    p.CriadoEm,
+                    Itens = p.ItensCozinha
+                }).Where(p => p.Itens.Any()).ToList();
+
+                return Ok(pedidosCozinha);
+            }
+            catch (Exception ex)
+            {
+                // Logar a exceção
+                return StatusCode(500, "Erro interno do servidor.");
+            }
+        }
+
+        [HttpGet("restaurante/pedidos/historico")]
+        public IActionResult ListarPedidosFinalizados()
+        {
+            try
+            {
+                var pedidos = _pedidoService.ObterPedidosFinalizados();
+                return Ok(pedidos);
+            }
+            catch (Exception ex)
+            {
+                // Logar a exceção
+                return StatusCode(500, "Erro interno do servidor.");
+            }
+        }
     }
 }

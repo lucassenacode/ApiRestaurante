@@ -13,7 +13,7 @@ namespace ApiRestaurante.Repositories.Repository
         void DeletarPedido(int id);
         void AtualizarStatusPedido(int id, StatusPedido novoStatus);
         List<Pedido> ObterPedidosPorStatus(StatusPedido status);
-        List<Pedido> ObterPedidosPorSetor(string setor);
+        List<Pedido> ObterPedidosFinalizados();
         bool PedidoExiste(int id);
     }
 }

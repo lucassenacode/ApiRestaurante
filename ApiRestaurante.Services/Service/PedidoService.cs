@@ -140,23 +140,20 @@ namespace ApiRestaurante.Services.Service
                 ((Contexto)_repositorio).FecharConexao();
             }
         }
-        public List<Pedido> ObterPedidosPorSetor(string setor)
-        {
-            var pedidos = _repositorio.ListarPedidos();
 
-            if (string.Equals(setor, "Cozinha", StringComparison.OrdinalIgnoreCase))
+        public List<Pedido> ObterPedidosFinalizados()
+        {
+            ((Contexto)_repositorio).AbrirConexao();
+            try
             {
-                return pedidos.Where(p => p.ItensCozinha.Any()).ToList();
+                return _repositorio.ObterPedidosFinalizados();
             }
-            else if (string.Equals(setor, "Copa", StringComparison.OrdinalIgnoreCase))
+            finally
             {
-                return pedidos.Where(p => p.ItensCopa.Any()).ToList();
-            }
-            else
-            {
-                return new List<Pedido>();
+                ((Contexto)_repositorio).FecharConexao();
             }
         }
+
         public bool PedidoExiste(int id)
         {
             ((Contexto)_repositorio).AbrirConexao();
