@@ -36,7 +36,7 @@ namespace ApiRestaurante.Controllers
                 }
                 return Ok(pedido); // Corrigido o tipo de retorno
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");
@@ -48,6 +48,30 @@ namespace ApiRestaurante.Controllers
         {
             int pedidoId = _pedidoService.CriarPedido(pedido);
             return StatusCode(201, new { PedidoId = pedidoId });
+        }
+
+        [HttpPut("restaurante/pedido/{id}")]
+        public IActionResult AtualizarPedido([FromRoute] int id, [FromBody] Pedido pedido)
+        {
+            if (id != pedido.IdPedido)
+            {
+                return BadRequest("O ID do pedido na rota não corresponde ao ID no corpo da solicitação.");
+            }
+
+            try
+            {
+                _pedidoService.AtualizarPedido(pedido);
+                return NoContent();
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                // Logar a exceção
+                return StatusCode(500, "Erro interno do servidor.");
+            }
         }
 
         [HttpDelete("restaurante/peodido/{id}")]
@@ -62,7 +86,7 @@ namespace ApiRestaurante.Controllers
             {
                 return NotFound();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 return StatusCode(500, "Erro interno do servidor.");
@@ -76,7 +100,7 @@ namespace ApiRestaurante.Controllers
                 _pedidoService.AtualizarStatusPedido(id, novoStatus);
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");
@@ -102,7 +126,7 @@ namespace ApiRestaurante.Controllers
 
                 return Ok(pedidosCopa);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");
@@ -127,7 +151,7 @@ namespace ApiRestaurante.Controllers
 
                 return Ok(pedidosCozinha);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");
@@ -142,7 +166,7 @@ namespace ApiRestaurante.Controllers
                 var pedidos = _pedidoService.ObterPedidosFinalizados();
                 return Ok(pedidos);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");

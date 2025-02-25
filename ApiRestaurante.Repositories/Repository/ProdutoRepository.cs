@@ -40,6 +40,32 @@ namespace ApiRestaurante.Repositories.Repository
             }
         }
 
+        public Produto ObterProdutoPorId(int idProduto)
+        {
+            string comandosql = @"SELECT IdProduto, NomeProduto, Preco, TipoProduto 
+                            FROM Produto 
+                            WHERE IdProduto = @IdProduto";
+
+            using (var cmd = new MySqlCommand(comandosql, _conn))
+            {
+                cmd.Parameters.AddWithValue("@IdProduto", idProduto);
+                using (var rdr = cmd.ExecuteReader())
+                {
+                    if (rdr.Read())
+                    {
+                        return new Produto
+                        {
+                            IdProduto = Convert.ToInt32(rdr["IdProduto"]),
+                            NomeProduto = Convert.ToString(rdr["NomeProduto"]),
+                            Preco = Convert.ToDecimal(rdr["Preco"]),
+                            TipoProduto = (TipoProduto)Enum.Parse(typeof(TipoProduto), Convert.ToString(rdr["TipoProduto"]))
+                        };
+                    }
+                    return null;
+                }
+            }
+        }
+
         public void CriarProduto(Produto produto)
         {
 
@@ -86,31 +112,6 @@ namespace ApiRestaurante.Repositories.Repository
                 if (cmd.ExecuteNonQuery() == 0)
                 {
                     throw new InvalidOperationException($"Nenhum produto afetado para esse {idProduto}.");
-                }
-            }
-        }
-        public Produto ObterProdutoPorId(int idProduto)
-        {
-            string comandosql = @"SELECT IdProduto, NomeProduto, Preco, TipoProduto 
-                            FROM Produto 
-                            WHERE IdProduto = @IdProduto";
-
-            using (var cmd = new MySqlCommand(comandosql, _conn))
-            {
-                cmd.Parameters.AddWithValue("@IdProduto", idProduto);
-                using (var rdr = cmd.ExecuteReader())
-                {
-                    if (rdr.Read())
-                    {
-                        return new Produto
-                        {
-                            IdProduto = Convert.ToInt32(rdr["IdProduto"]),
-                            NomeProduto = Convert.ToString(rdr["NomeProduto"]),
-                            Preco = Convert.ToDecimal(rdr["Preco"]),
-                            TipoProduto = (TipoProduto)Enum.Parse(typeof(TipoProduto), Convert.ToString(rdr["TipoProduto"]))
-                        };
-                    }
-                    return null;
                 }
             }
         }

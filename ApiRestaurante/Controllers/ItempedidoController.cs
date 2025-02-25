@@ -33,7 +33,7 @@ namespace ApiRestaurante.Controllers
                 }
                 return Ok(itens);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 return StatusCode(500, "Erro interno do servidor.");
@@ -60,7 +60,7 @@ namespace ApiRestaurante.Controllers
                 _itemPedidoService.AtualizarItemPedido(item);
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 return StatusCode(500, "Erro interno do servidor.");
@@ -75,7 +75,7 @@ namespace ApiRestaurante.Controllers
                 _itemPedidoService.RemoverItemPedido(idItemPedido);
                 return NoContent();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");

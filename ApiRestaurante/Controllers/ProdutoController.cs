@@ -34,7 +34,7 @@ namespace ApiRestaurante.Controllers
                 }
                 return Ok(produto);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");
@@ -54,7 +54,7 @@ namespace ApiRestaurante.Controllers
                 _produtoService.CriarProduto(produto);
                 return CreatedAtAction(nameof(ObterProdutoPorId), new { id = produto.IdProduto }, produto);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");
@@ -83,9 +83,9 @@ namespace ApiRestaurante.Controllers
             {
                 return NotFound();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                // Logar a exceção
+
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }
@@ -102,7 +102,7 @@ namespace ApiRestaurante.Controllers
             {
                 return NotFound();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
 
                 return StatusCode(500, "Erro interno do servidor.");
