@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using ApiRestaurante.Domain.Models;
 using ApiRestaurante.Domain.Models.Enuns;
+using ApiRestaurante.Domain.Models.Exceptions;
 using ApiRestaurante.Services.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -46,8 +47,19 @@ namespace ApiRestaurante.Controllers
         [HttpPost("restaurante/pedido")]
         public IActionResult CriarPedido([FromBody] Pedido pedido)
         {
-            int pedidoId = _pedidoService.CriarPedido(pedido);
-            return StatusCode(201, new { PedidoId = pedidoId });
+            try
+            {
+                int pedidoId = _pedidoService.CriarPedido(pedido);
+                return StatusCode(201, new { PedidoId = pedidoId });
+            }
+            catch (ValidacaoException ex)
+            {
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.ToString());
+            }
         }
 
         [HttpPut("restaurante/pedido/{id}")]
@@ -81,16 +93,12 @@ namespace ApiRestaurante.Controllers
                 _pedidoService.DeletarPedido(id);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
             catch (Exception)
             {
-
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }
+
         [HttpPut("restaurante/pedido/{id}/status")]
         public IActionResult AtualizarStatusPedido([FromRoute] int id, [FromBody] StatusPedido novoStatus)
         {

@@ -77,13 +77,8 @@ namespace ApiRestaurante.Controllers
                 _produtoService.AtualizarProduto(produto);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
             catch (Exception)
             {
-
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }
@@ -96,13 +91,8 @@ namespace ApiRestaurante.Controllers
                 _produtoService.DeletarProduto(id);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
-            {
-                return NotFound();
-            }
             catch (Exception)
             {
-
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }

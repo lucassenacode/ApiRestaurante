@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 using ApiRestaurante.Domain.Models;
+using ApiRestaurante.Domain.Models.Enuns;
 using ApiRestaurante.Domain.Models.Exceptions;
 using ApiRestaurante.Repositories.Repository;
+
 
 namespace ApiRestaurante.Services.Service
 {
@@ -74,14 +72,24 @@ namespace ApiRestaurante.Services.Service
 
         private void ValidarItemPedido(ItemPedido item)
         {
-            var context = new ValidationContext(item, serviceProvider: null, items: null);
-            var results = new List<ValidationResult>();
-            bool isValid = Validator.TryValidateObject(item, context, results, true);
-
-            if (!isValid)
+            if (item == null)
             {
-                var errorMessages = results.Select(r => r.ErrorMessage).ToList();
-                throw new ValidacaoException(string.Join("; ", errorMessages));
+                throw new ValidacaoException("O JSON está mal formatado ou foi enviado vazio.");
+            }
+
+            if (item.IdPedido <= 0)
+            {
+                throw new ValidacaoException("O ID do pedido é obrigatório e deve ser maior que zero.");
+            }
+
+            if (item.IdProduto <= 0)
+            {
+                throw new ValidacaoException("O ID do produto é obrigatório e deve ser maior que zero.");
+            }
+
+            if (item.Quantidade <= 0)
+            {
+                throw new ValidacaoException("A quantidade é obrigatória e deve ser maior que zero.");
             }
         }
     }

@@ -3,13 +3,13 @@ using ApiRestaurante.Domain.Models;
 using ApiRestaurante.Domain.Models.Enuns;
 using ApiRestaurante.Domain.Models.Exceptions;
 using ApiRestaurante.Repositories.Repository;
-using ApiRestaurante.Services.Service;
 
 namespace ApiRestaurante.Services.Service
 {
     public class ProdutoService : IProdutoService
     {
         private readonly IProdutoRepository _repositorio;
+
         public ProdutoService(IProdutoRepository repositorio)
         {
             _repositorio = repositorio;

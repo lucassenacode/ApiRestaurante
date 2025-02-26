@@ -14,15 +14,17 @@ namespace ApiRestaurante.Domain.Models
         public int IdProduto { get; set; }
 
         [JsonPropertyName("NomeProduto")]
-        [Required]
+        [Required(ErrorMessage = "O nome do produto é obrigatório.")]
+        [StringLength(100, MinimumLength = 3, ErrorMessage = "O nome do produto deve ter entre 3 e 100 caracteres.")]
         public string NomeProduto { get; set; }
 
         [JsonPropertyName("Preco")]
-        [Required]
+        [Required(ErrorMessage = "O preço do produto é obrigatório.")]
+        [Range(0.01, double.MaxValue, ErrorMessage = "O preço do produto deve ser maior que zero.")]
         public decimal Preco { get; set; }
 
         [JsonPropertyName("TipoProduto")]
-        [Required]
+        [Required(ErrorMessage = "O tipo do produto é obrigatório.")]
         [JsonConverter(typeof(JsonStringEnumConverter))]
         public TipoProduto TipoProduto { get; set; }
     }

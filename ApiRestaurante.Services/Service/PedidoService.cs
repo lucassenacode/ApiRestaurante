@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
 using ApiRestaurante.Domain.Models;
 using ApiRestaurante.Domain.Models.Enuns;
 using ApiRestaurante.Domain.Models.Exceptions;
 using ApiRestaurante.Repositories.Repository;
+
 
 namespace ApiRestaurante.Services.Service
 {
@@ -197,7 +197,7 @@ namespace ApiRestaurante.Services.Service
                 throw new ValidacaoException("O nome do cliente precisa ter entre 3 e 255 caracteres.");
             }
 
-            if (pedido.NumeroMesa <= 0)
+            if (pedido.NumeroMesa < 1)
             {
                 throw new ValidacaoException("O número da mesa deve ser maior que zero.");
             }

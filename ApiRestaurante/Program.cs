@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Cors.Infrastructure;
+
 namespace ApiRestaurante;
 
 public class Program
@@ -14,6 +16,14 @@ public class Program
                 options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
                 options.JsonSerializerOptions.PropertyNamingPolicy = null;
             });
+
+        builder.Services.AddCors(options =>
+        {
+            options.AddDefaultPolicy(policy =>
+            {
+                policy.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
+            });
+        });
 
 
         builder.Services.AddEndpointsApiExplorer();
@@ -41,6 +51,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseCors();
 
         app.UseAuthorization();
 
