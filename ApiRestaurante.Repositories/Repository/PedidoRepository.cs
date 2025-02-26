@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ApiRestaurante.Domain.Models;
 using ApiRestaurante.Domain.Models.Enuns;
-using Microsoft.Extensions.Configuration; // Adicione esta linha
+using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 
 namespace ApiRestaurante.Repositories.Repository
@@ -44,9 +44,9 @@ namespace ApiRestaurante.Repositories.Repository
 
                         var itemPedido = new ItemPedido
                         {
-                            IdItemPedido = Convert.ToInt32(rdr["IdItemPedido"]), // Corrigido
-                            IdPedido = pedidoId, // Corrigido
-                            IdProduto = Convert.ToInt32(rdr["IdProduto"]), // Corrigido
+                            IdItemPedido = Convert.ToInt32(rdr["IdItemPedido"]),
+                            IdPedido = pedidoId,
+                            IdProduto = Convert.ToInt32(rdr["IdProduto"]),
                             Produto = new Produto
                             {
                                 IdProduto = Convert.ToInt32(rdr["IdProduto"]),
@@ -86,7 +86,7 @@ namespace ApiRestaurante.Repositories.Repository
                             CriadoEm = Convert.ToDateTime(rdr["CriadoEm"])
                         };
                     }
-                    return null; // Retorna null se o pedido não for encontrado
+                    return null;
                 }
             }
         }
@@ -94,15 +94,15 @@ namespace ApiRestaurante.Repositories.Repository
         {
             string comandosql = @"INSERT INTO Pedido (NomeCliente, NumeroMesa, Status) 
                           VALUES (@NomeCliente, @NumeroMesa, @Status);
-                          SELECT LAST_INSERT_ID();"; // Obtém o ID do pedido inserido
+                          SELECT LAST_INSERT_ID();";
 
             using (var cmd = new MySqlCommand(comandosql, _conn))
             {
                 cmd.Parameters.AddWithValue("@NomeCliente", pedido.NomeCliente);
                 cmd.Parameters.AddWithValue("@NumeroMesa", pedido.NumeroMesa);
-                cmd.Parameters.AddWithValue("@Status", pedido.Status.ToString()); // Converte o enum para string
+                cmd.Parameters.AddWithValue("@Status", pedido.Status.ToString());
 
-                return Convert.ToInt32(cmd.ExecuteScalar()); // Executa a consulta e retorna o ID
+                return Convert.ToInt32(cmd.ExecuteScalar());
             }
         }
         public void AtualizarPedido(Pedido pedido)

@@ -14,7 +14,7 @@ namespace ApiRestaurante.Domain.Models
         public int IdProduto { get; set; }
 
         [JsonPropertyName("NomeProduto")]
-        [Required] // Campo obrigatório
+        [Required]
         public string NomeProduto { get; set; }
 
         [JsonPropertyName("Preco")]

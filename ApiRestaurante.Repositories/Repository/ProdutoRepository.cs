@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ApiRestaurante.Domain.Models;
 using ApiRestaurante.Domain.Models.Enuns;
-using Microsoft.Extensions.Configuration; // Adicione esta linha
+using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 
 namespace ApiRestaurante.Repositories.Repository

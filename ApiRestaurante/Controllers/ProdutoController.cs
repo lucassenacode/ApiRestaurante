@@ -37,7 +37,6 @@ namespace ApiRestaurante.Controllers
             }
             catch (Exception)
             {
-                // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }

@@ -24,21 +24,21 @@ namespace ApiRestaurante.Controllers
             return Ok(pedidos);
         }
 
-        [HttpGet("restaurante/pedido/{id}")] // Corrigido o nome da rota
+        [HttpGet("restaurante/pedido/{id}")]
         public IActionResult PedidoPorId([FromRoute] int id)
         {
             try
             {
-                var pedido = _pedidoService.ObterPedidoPorId(id); // Corrigido o nome da variável
+                var pedido = _pedidoService.ObterPedidoPorId(id);
                 if (pedido == null)
                 {
                     return NotFound();
                 }
-                return Ok(pedido); // Corrigido o tipo de retorno
+                return Ok(pedido);
             }
             catch (Exception)
             {
-                // Logar a exceção
+
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }
@@ -101,7 +101,6 @@ namespace ApiRestaurante.Controllers
             }
             catch (Exception)
             {
-                // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }
@@ -167,7 +166,6 @@ namespace ApiRestaurante.Controllers
             }
             catch (Exception)
             {
-                // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }

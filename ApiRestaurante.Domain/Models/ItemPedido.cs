@@ -20,7 +20,7 @@ public class ItemPedido
     public int IdProduto { get; set; }
 
     [JsonPropertyName("produto")]
-    [JsonIgnore] // Ignorar na serialização
+    [JsonIgnore]
     public virtual Produto? Produto { get; set; }
 
     [JsonPropertyName("quantidade")]

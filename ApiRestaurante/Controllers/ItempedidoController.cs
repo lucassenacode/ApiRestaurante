@@ -49,7 +49,7 @@ namespace ApiRestaurante.Controllers
                 _itemPedidoService.AdicionarItemAoPedido(item);
                 return StatusCode(201);
             }
-            catch (InvalidOperationException ex) // Modificado para InvalidOperationException
+            catch (InvalidOperationException ex)
             {
                 return BadRequest(ex.Message);
             }
