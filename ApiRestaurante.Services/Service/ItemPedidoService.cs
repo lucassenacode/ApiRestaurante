@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiRestaurante.Domain.Models;
+using ApiRestaurante.Domain.Models.Exceptions;
 using ApiRestaurante.Repositories.Repository;
 
 namespace ApiRestaurante.Services.Service
@@ -80,7 +81,7 @@ namespace ApiRestaurante.Services.Service
             if (!isValid)
             {
                 var errorMessages = results.Select(r => r.ErrorMessage).ToList();
-                throw new InvalidOperationException(string.Join("; ", errorMessages));
+                throw new ValidacaoException(string.Join("; ", errorMessages));
             }
         }
     }

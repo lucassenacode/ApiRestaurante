@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using ApiRestaurante.Domain.Models;
 using ApiRestaurante.Domain.Models.Enuns;
+using ApiRestaurante.Domain.Models.Exceptions;
 using ApiRestaurante.Repositories.Repository;
 using ApiRestaurante.Services.Service;
 
@@ -93,27 +94,27 @@ namespace ApiRestaurante.Services.Service
         {
             if (produto == null)
             {
-                throw new InvalidOperationException("O JSON está mal formatado ou foi enviado vazio.");
+                throw new ValidacaoException("O JSON está mal formatado ou foi enviado vazio.");
             }
 
             if (string.IsNullOrWhiteSpace(produto.NomeProduto))
             {
-                throw new InvalidOperationException("O nome do produto é obrigatório.");
+                throw new ValidacaoException("O nome do produto é obrigatório.");
             }
 
             if (produto.NomeProduto.Trim().Length < 3 || produto.NomeProduto.Trim().Length > 100)
             {
-                throw new InvalidOperationException("O nome do produto precisa ter entre 3 e 100 caracteres.");
+                throw new ValidacaoException("O nome do produto precisa ter entre 3 e 100 caracteres.");
             }
 
             if (produto.Preco <= 0)
             {
-                throw new InvalidOperationException("O preço do produto deve ser maior que zero.");
+                throw new ValidacaoException("O preço do produto deve ser maior que zero.");
             }
 
             if (!Enum.IsDefined(typeof(TipoProduto), produto.TipoProduto))
             {
-                throw new InvalidOperationException("O tipo de produto é inválido.");
+                throw new ValidacaoException("O tipo de produto é inválido.");
             }
         }
     }

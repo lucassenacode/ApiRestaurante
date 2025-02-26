@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using ApiRestaurante.Domain.Models;
 using ApiRestaurante.Domain.Models.Enuns;
+using ApiRestaurante.Domain.Models.Exceptions;
 using ApiRestaurante.Repositories.Repository;
 
 namespace ApiRestaurante.Services.Service
@@ -54,9 +55,7 @@ namespace ApiRestaurante.Services.Service
             ((Contexto)_itemPedidoRepository).AbrirConexao();
             try
             {
-
                 ValidarPedido(pedido);
-
 
                 foreach (var item in pedido.Itens)
                 {
@@ -70,9 +69,7 @@ namespace ApiRestaurante.Services.Service
                     item.Produto = produto;
                 }
 
-
                 int idPedido = _repositorio.CriarPedido(pedido);
-
 
                 foreach (var item in pedido.Itens)
                 {
@@ -187,39 +184,39 @@ namespace ApiRestaurante.Services.Service
         {
             if (pedido == null)
             {
-                throw new InvalidOperationException("O JSON está mal formatado ou foi enviado vazio.");
+                throw new ValidacaoException("O JSON está mal formatado ou foi enviado vazio.");
             }
 
             if (string.IsNullOrWhiteSpace(pedido.NomeCliente))
             {
-                throw new InvalidOperationException("O nome do cliente é obrigatório.");
+                throw new ValidacaoException("O nome do cliente é obrigatório.");
             }
 
             if (pedido.NomeCliente.Trim().Length < 3 || pedido.NomeCliente.Trim().Length > 255)
             {
-                throw new InvalidOperationException("O nome do cliente precisa ter entre 3 e 255 caracteres.");
+                throw new ValidacaoException("O nome do cliente precisa ter entre 3 e 255 caracteres.");
             }
 
             if (pedido.NumeroMesa <= 0)
             {
-                throw new InvalidOperationException("O número da mesa deve ser maior que zero.");
+                throw new ValidacaoException("O número da mesa deve ser maior que zero.");
             }
 
             if (pedido.Itens == null || pedido.Itens.Count == 0)
             {
-                throw new InvalidOperationException("O pedido deve conter pelo menos um item.");
+                throw new ValidacaoException("O pedido deve conter pelo menos um item.");
             }
 
             foreach (var item in pedido.Itens)
             {
                 if (item.IdProduto <= 0)
                 {
-                    throw new InvalidOperationException("O ID do produto é inválido.");
+                    throw new ValidacaoException("O ID do produto é inválido.");
                 }
 
                 if (item.Quantidade <= 0)
                 {
-                    throw new InvalidOperationException("A quantidade de cada item deve ser maior que zero.");
+                    throw new ValidacaoException("A quantidade de cada item deve ser maior que zero.");
                 }
             }
         }

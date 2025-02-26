@@ -1,5 +1,6 @@
 using System;
 using ApiRestaurante.Domain.Models;
+using ApiRestaurante.Domain.Models.Exceptions;
 using ApiRestaurante.Services.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -49,13 +50,13 @@ namespace ApiRestaurante.Controllers
                 _produtoService.CriarProduto(produto);
                 return StatusCode(201);
             }
-            catch (InvalidOperationException ex)
+            catch (ValidacaoException ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(400, ex.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(500, "Erro interno do servidor.");
+                return StatusCode(500, ex.ToString());
             }
         }
 

@@ -63,14 +63,13 @@ namespace ApiRestaurante.Controllers
                 _pedidoService.AtualizarPedido(pedido);
                 return NoContent();
             }
-            catch (KeyNotFoundException)
+            catch (InvalidOperationException ex)
             {
-                return NotFound();
+                return StatusCode(400, ex.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Logar a exceção
-                return StatusCode(500, "Erro interno do servidor.");
+                return StatusCode(500, ex.ToString());
             }
         }
 
@@ -128,7 +127,7 @@ namespace ApiRestaurante.Controllers
             }
             catch (Exception)
             {
-                // Logar a exceção
+
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }
@@ -153,7 +152,7 @@ namespace ApiRestaurante.Controllers
             }
             catch (Exception)
             {
-                // Logar a exceção
+
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }

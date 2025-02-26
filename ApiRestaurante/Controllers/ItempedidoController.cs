@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ApiRestaurante.Domain.Models;
+using ApiRestaurante.Domain.Models.Exceptions;
 using ApiRestaurante.Services.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -65,16 +66,18 @@ namespace ApiRestaurante.Controllers
             {
                 return BadRequest("O ID do item do pedido na rota não corresponde ao ID no corpo da requisição.");
             }
-
             try
             {
                 _itemPedidoService.AtualizarItemPedido(item);
-                return NoContent();
+                return StatusCode(201);
             }
-            catch (Exception)
+            catch (ValidacaoException ex)
             {
-
-                return StatusCode(500, "Erro interno do servidor.");
+                return StatusCode(400, ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.ToString());
             }
         }
 
@@ -88,7 +91,7 @@ namespace ApiRestaurante.Controllers
             }
             catch (Exception)
             {
-                // Logar a exceção
+
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }
