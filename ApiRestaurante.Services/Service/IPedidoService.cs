@@ -11,9 +11,10 @@ namespace ApiRestaurante.Services.Service
         int CriarPedido(Pedido pedido);
         void AtualizarPedido(Pedido pedido);
         void AtualizarStatusPedido(int id, StatusPedido novoStatus);
+        void DeletarPedido(int idPedido);
         List<Pedido> ObterPedidosPorStatus(StatusPedido status);
         List<Pedido> ObterPedidosFinalizados();
-        void DeletarPedido(int idPedido);
+
 
     }
 }

@@ -43,8 +43,19 @@ namespace ApiRestaurante.Controllers
         [HttpPost("restaurante/itemPedido")]
         public IActionResult AdicionarItemAoPedido([FromBody] ItemPedido item)
         {
-            _itemPedidoService.AdicionarItemAoPedido(item);
-            return StatusCode(201);
+            try
+            {
+                _itemPedidoService.AdicionarItemAoPedido(item);
+                return StatusCode(201);
+            }
+            catch (InvalidOperationException ex) // Modificado para InvalidOperationException
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception)
+            {
+                return StatusCode(500, "Erro interno do servidor.");
+            }
         }
 
         [HttpPut("restaurante/itemPedido/{idItemPedido}")]

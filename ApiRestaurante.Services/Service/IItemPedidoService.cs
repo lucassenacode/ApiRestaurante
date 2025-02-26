@@ -6,8 +6,8 @@ namespace ApiRestaurante.Services.Service
 {
     public interface IItemPedidoService
     {
-        void AdicionarItemAoPedido(ItemPedido item);
         List<ItemPedido> ListarItensPedidoPorPedidoId(int pedidoId);
+        void AdicionarItemAoPedido(ItemPedido item);
         void AtualizarItemPedido(ItemPedido item);
         void RemoverItemPedido(int id);
     }

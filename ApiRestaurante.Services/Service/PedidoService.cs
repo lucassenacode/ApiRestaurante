@@ -51,20 +51,28 @@ namespace ApiRestaurante.Services.Service
         {
             ((Contexto)_repositorio).AbrirConexao();
             ((Contexto)_produtoRepository).AbrirConexao();
-            ((Contexto)_itemPedidoRepository).AbrirConexao(); // Adicionar esta linha
+            ((Contexto)_itemPedidoRepository).AbrirConexao();
             try
             {
+
+                ValidarPedido(pedido);
+
+
                 foreach (var item in pedido.Itens)
                 {
+                    Console.WriteLine($"Buscando produto com IdProduto: {item.IdProduto}");
                     var produto = _produtoRepository.ObterProdutoPorId(item.IdProduto);
                     if (produto == null)
                     {
-                        throw new Exception($"Produto não encontrado: {item.IdProduto}");
+                        Console.WriteLine($"Produto não encontrado: {item.IdProduto}");
+                        throw new InvalidOperationException($"Produto não encontrado: {item.IdProduto}");
                     }
                     item.Produto = produto;
                 }
 
+
                 int idPedido = _repositorio.CriarPedido(pedido);
+
 
                 foreach (var item in pedido.Itens)
                 {
@@ -73,6 +81,14 @@ namespace ApiRestaurante.Services.Service
                 }
 
                 return idPedido;
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw;
+            }
+            catch (Exception)
+            {
+                throw;
             }
             finally
             {
@@ -164,6 +180,47 @@ namespace ApiRestaurante.Services.Service
             finally
             {
                 ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+
+        private void ValidarPedido(Pedido pedido)
+        {
+            if (pedido == null)
+            {
+                throw new InvalidOperationException("O JSON está mal formatado ou foi enviado vazio.");
+            }
+
+            if (string.IsNullOrWhiteSpace(pedido.NomeCliente))
+            {
+                throw new InvalidOperationException("O nome do cliente é obrigatório.");
+            }
+
+            if (pedido.NomeCliente.Trim().Length < 3 || pedido.NomeCliente.Trim().Length > 255)
+            {
+                throw new InvalidOperationException("O nome do cliente precisa ter entre 3 e 255 caracteres.");
+            }
+
+            if (pedido.NumeroMesa <= 0)
+            {
+                throw new InvalidOperationException("O número da mesa deve ser maior que zero.");
+            }
+
+            if (pedido.Itens == null || pedido.Itens.Count == 0)
+            {
+                throw new InvalidOperationException("O pedido deve conter pelo menos um item.");
+            }
+
+            foreach (var item in pedido.Itens)
+            {
+                if (item.IdProduto <= 0)
+                {
+                    throw new InvalidOperationException("O ID do produto é inválido.");
+                }
+
+                if (item.Quantidade <= 0)
+                {
+                    throw new InvalidOperationException("A quantidade de cada item deve ser maior que zero.");
+                }
             }
         }
     }

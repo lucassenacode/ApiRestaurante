@@ -127,5 +127,7 @@ namespace ApiRestaurante.Repositories.Repository
                 return Convert.ToBoolean(cmd.ExecuteScalar());
             }
         }
+
+
     }
 }

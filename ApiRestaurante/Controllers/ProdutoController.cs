@@ -44,19 +44,17 @@ namespace ApiRestaurante.Controllers
         [HttpPost("restaurante/produto")]
         public IActionResult CriarProduto([FromBody] Produto produto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             try
             {
                 _produtoService.CriarProduto(produto);
-                return CreatedAtAction(nameof(ObterProdutoPorId), new { id = produto.IdProduto }, produto);
+                return StatusCode(201);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
             }
             catch (Exception)
             {
-                // Logar a exceção
                 return StatusCode(500, "Erro interno do servidor.");
             }
         }

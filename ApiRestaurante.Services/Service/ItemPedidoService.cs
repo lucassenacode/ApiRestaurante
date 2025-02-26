@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using ApiRestaurante.Domain.Models;
@@ -19,6 +20,7 @@ namespace ApiRestaurante.Services.Service
 
         public void AdicionarItemAoPedido(ItemPedido item)
         {
+            ValidarItemPedido(item);
             ((Contexto)_repositorio).AbrirConexao();
             try
             {
@@ -66,6 +68,19 @@ namespace ApiRestaurante.Services.Service
             finally
             {
                 ((Contexto)_repositorio).FecharConexao();
+            }
+        }
+
+        private void ValidarItemPedido(ItemPedido item)
+        {
+            var context = new ValidationContext(item, serviceProvider: null, items: null);
+            var results = new List<ValidationResult>();
+            bool isValid = Validator.TryValidateObject(item, context, results, true);
+
+            if (!isValid)
+            {
+                var errorMessages = results.Select(r => r.ErrorMessage).ToList();
+                throw new InvalidOperationException(string.Join("; ", errorMessages));
             }
         }
     }
