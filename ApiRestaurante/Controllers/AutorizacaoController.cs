@@ -20,11 +20,16 @@ namespace ApiRestaurante.Controllers
         }
 
         [HttpPost("restaurante/login")]
-        public IActionResult Login(Usuario model)
+        public IActionResult Login(UsuarioLogin model)
         {
             try
             {
-                var token = _service.Login(model);
+                var usuario = new Usuario
+                {
+                    Email = model.Email,
+                    Senha = model.Senha
+                };
+                var token = _service.Login(usuario);
                 return StatusCode(200, token);
             }
             catch (Exception)
