@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using ApiRestaurante.Domain.Models;
 using ApiRestaurante.Domain.Models.Exceptions;
 using ApiRestaurante.Services.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiRestaurante.Controllers
 {
+    [Authorize]
     [ApiController]
     public class ItemPedidoController : ControllerBase
     {
