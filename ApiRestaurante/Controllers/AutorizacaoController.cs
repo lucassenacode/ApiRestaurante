@@ -3,6 +3,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using ApiRestaurante.Domain.Models;
+using ApiRestaurante.Domain.Models.Dto;
 using ApiRestaurante.Services.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,7 +21,7 @@ namespace ApiRestaurante.Controllers
         }
 
         [HttpPost("restaurante/login")]
-        public IActionResult Login(UsuarioLogin model)
+        public IActionResult Login(UsuarioDto model)
         {
             try
             {
