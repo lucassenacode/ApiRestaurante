@@ -42,18 +42,19 @@ public class Program
                 In = ParameterLocation.Header,
                 Description = "Insira o token JWT assim: Bearer {seu_token}",
                 Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey
+                Type = SecuritySchemeType.Http, // Alterado para Http
+                Scheme = "Bearer" // Adicionado o scheme Bearer
             });
 
             c.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
-                {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
-                    },
-                    new List<string>()
-                }
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            new List<string>()
+        }
             });
         });
 

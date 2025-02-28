@@ -34,12 +34,15 @@ namespace ApiRestaurante.Services.Service
 
             var senhaJwt = Encoding.ASCII.GetBytes(_config["Jwt:SenhaJWT"]);
 
+            // Mapear IdPerfil para o nome da role
+            string roleName = GetRoleName(usuario.Perfil);
+
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[]
                 {
                         new Claim ("Email", usuario.Email),
-                        new Claim (ClaimTypes.Role, usuario.Perfil.GetHashCode().ToString())
+                        new Claim (ClaimTypes.Role, roleName)
                     }),
                 Expires = DateTime.UtcNow.AddHours(12),
                 SigningCredentials = new SigningCredentials
@@ -60,6 +63,22 @@ namespace ApiRestaurante.Services.Service
                 NomeUsuario = usuario.Nome
             };
         }
-    }
 
+        private string GetRoleName(PerfilUsuario perfil)
+        {
+            switch (perfil)
+            {
+                case PerfilUsuario.Admin:
+                    return "Admin";
+                case PerfilUsuario.Garcom:
+                    return "Garcom";
+                case PerfilUsuario.Cozinha:
+                    return "Cozinha";
+                case PerfilUsuario.Copa:
+                    return "Copa";
+                default:
+                    return "Unknown";
+            }
+        }
+    }
 }

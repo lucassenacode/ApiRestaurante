@@ -11,6 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace ApiRestaurante.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     public class AutorizacaoController : ControllerBase
     {

@@ -61,5 +61,6 @@ AND Senha = 'fa3c1cdee866e8b57b644e55aa85ad1f001ea14471da9d41cdd3195e5613f4b8b6f
 
 SELECT Email, Senha FROM Usuario;
 
-SELECT * FROM Usuario u 
+SELECT  u.Email, u.Nome, u.IdPerfil FROM Usuario u  
 join Perfil p on u.IdPerfil = p.IdPerfil 
+WHERE u.Email = 'admin@example.com ' and u.Senha = 'fa3c1cdee866e8b57b644e55aa85ad1f001ea14471da9d41cdd3195e5613f4b8b6fff905e7f1afb3954a3e182e92c52497e41decf5718b51a09bfadf52e77f20 '

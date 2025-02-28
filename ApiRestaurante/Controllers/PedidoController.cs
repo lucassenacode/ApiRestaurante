@@ -20,6 +20,7 @@ namespace ApiRestaurante.Controllers
             _pedidoService = pedidoService;
         }
 
+        [Authorize(Roles = "Admim, Garcom")]
         [HttpGet("restaurante/pedidos")]
         public IActionResult ListarPedidos()
         {
@@ -27,6 +28,7 @@ namespace ApiRestaurante.Controllers
             return Ok(pedidos);
         }
 
+        [Authorize(Roles = "Admim, Garcom")]
         [HttpGet("restaurante/pedido/{id}")]
         public IActionResult PedidoPorId([FromRoute] int id)
         {
@@ -46,6 +48,7 @@ namespace ApiRestaurante.Controllers
             }
         }
 
+        [Authorize(Roles = "Admim, Garcom")]
         [HttpPost("restaurante/pedido")]
         public IActionResult CriarPedido([FromBody] Pedido pedido)
         {
@@ -64,6 +67,7 @@ namespace ApiRestaurante.Controllers
             }
         }
 
+        [Authorize(Roles = "Admim, Garcom")]
         [HttpPut("restaurante/pedido/{id}")]
         public IActionResult AtualizarPedido([FromRoute] int id, [FromBody] Pedido pedido)
         {
@@ -87,6 +91,7 @@ namespace ApiRestaurante.Controllers
             }
         }
 
+        [Authorize(Roles = "Admim")]
         [HttpDelete("restaurante/peodido/{id}")]
         public IActionResult DeletarPedido([FromRoute] int id)
         {
@@ -101,6 +106,7 @@ namespace ApiRestaurante.Controllers
             }
         }
 
+        [Authorize(Roles = "Admim, Garcom, Cozinha, Copa")]
         [HttpPut("restaurante/pedido/{id}/status")]
         public IActionResult AtualizarStatusPedido([FromRoute] int id, [FromBody] StatusPedido novoStatus)
         {
@@ -115,7 +121,7 @@ namespace ApiRestaurante.Controllers
             }
         }
 
-
+        [Authorize(Roles = "Admim, Copa")]
         [HttpGet("restaurante/pedidos/copa")]
         public IActionResult ListarPedidosCopa()
         {
@@ -141,6 +147,7 @@ namespace ApiRestaurante.Controllers
             }
         }
 
+        [Authorize(Roles = "Admim, Cozinha")]
         [HttpGet("restaurante/pedidos/cozinha")]
         public IActionResult ListarPedidosCozinha()
         {
@@ -166,6 +173,7 @@ namespace ApiRestaurante.Controllers
             }
         }
 
+        [Authorize(Roles = "Admim")]
         [HttpGet("restaurante/pedidos/historico")]
         public IActionResult ListarPedidosFinalizados()
         {
