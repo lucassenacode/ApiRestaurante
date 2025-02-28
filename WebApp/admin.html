@@ -13,13 +13,20 @@
     <div class="container mt-5">
       <h1 class="text-center">Painel do Administrador</h1>
       <button class="btn btn-danger" onclick="logout()">Sair</button>
-      <h2 class="mt-4">Gerenciar Produtos</h2>
-      <div id="produtos" class="row"></div>
+      <h2 class="mt-4">Histórico de Pedidos</h2>
+      <div id="historicoPedidos" class="row"></div>
+      <h3 id="valorFaturadoDia"></h3>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="WebApp/script.js"></script>
     <script>
+      function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("nivelAcesso");
+        localStorage.removeItem("nomeUsuario");
+        window.location.href = "login.html";
+      }
+
       $(document).ready(function () {
         let token = localStorage.getItem("token");
         let nivelAcesso = localStorage.getItem("nivelAcesso");
@@ -30,13 +37,89 @@
 
         $.ajax({
           url: "http://localhost:5195/restaurante/produto",
+          type: "GET",
           headers: { Authorization: "Bearer " + token },
-          success: function (data) {
-            let html = "";
-            data.forEach((produto) => {
-              html += `<div class='col-md-4'><div class='card'><div class='card-body'><h5>${produto.nome}</h5><p>R$ ${produto.preco}</p></div></div></div>`;
+          success: function (produtos) {
+            $.ajax({
+              url: "http://localhost:5195/restaurante/pedidos/historico",
+              type: "GET",
+              headers: { Authorization: "Bearer " + token },
+              success: function (pedidos) {
+                let faturamentoPorDia = {};
+                let htmlPedidos = "";
+
+                pedidos.forEach((pedido) => {
+                  let valorTotalPedido = 0;
+                  let dataPedido = new Date(pedido.criadoEm).toLocaleDateString(
+                    "pt-BR"
+                  );
+                  let itensHtml = "";
+
+                  pedido.itens.forEach((item) => {
+                    let produto = produtos.find(
+                      (p) => p.IdProduto === item.idProduto
+                    );
+                    if (produto) {
+                      let valorTotalItem = produto.Preco * item.quantidade;
+                      valorTotalPedido += valorTotalItem;
+                      itensHtml += `<li>${item.quantidade}x ${
+                        produto.NomeProduto
+                      } - R$ ${valorTotalItem.toFixed(2)}</li>`;
+                    }
+                  });
+
+                  htmlPedidos += `
+                                    <div class="col-md-4 mb-4">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Pedido ${
+                                                  pedido.idPedido
+                                                }</h5>
+                                                <p class="card-text">Cliente: ${
+                                                  pedido.nomeCliente
+                                                }</p>
+                                                <p class="card-text">Mesa: ${
+                                                  pedido.numeroMesa
+                                                }</p>
+                                                <p class="card-text">Status: ${
+                                                  pedido.status
+                                                }</p>
+                                                <ul>${itensHtml}</ul>
+                                                <p class="card-text"><strong>Valor Total: R$ ${valorTotalPedido.toFixed(
+                                                  2
+                                                )}</strong></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+
+                  if (!faturamentoPorDia[dataPedido]) {
+                    faturamentoPorDia[dataPedido] = 0;
+                  }
+                  faturamentoPorDia[dataPedido] += valorTotalPedido;
+                });
+
+                $("#historicoPedidos").html(htmlPedidos);
+
+                let htmlFaturamento = "<h3>Faturamento por Dia</h3><ul>";
+                for (const [data, valor] of Object.entries(faturamentoPorDia)) {
+                  htmlFaturamento += `<li><strong>${data}:</strong> R$ ${valor.toFixed(
+                    2
+                  )}</li>`;
+                }
+                htmlFaturamento += "</ul>";
+
+                $("#valorFaturadoDia").html(htmlFaturamento);
+              },
+              error: function (error) {
+                alert(
+                  `Erro ao carregar o histórico de pedidos: ${error.responseText}`
+                );
+              },
             });
-            $("#produtos").html(html);
+          },
+          error: function (error) {
+            alert(`Erro ao carregar produtos: ${error.responseText}`);
           },
         });
       });

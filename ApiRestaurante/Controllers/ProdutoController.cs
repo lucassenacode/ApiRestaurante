@@ -26,7 +26,7 @@ namespace ApiRestaurante.Controllers
             return Ok(produtos);
         }
 
-        [Authorize(Roles = "Admim, Garcom")]
+        [Authorize(Roles = "Admin, Garcom")]
         [HttpGet("restaurante/produto/{id}")]
         public IActionResult ObterProdutoPorId([FromRoute] int id)
         {
@@ -45,7 +45,7 @@ namespace ApiRestaurante.Controllers
             }
         }
 
-        [Authorize(Roles = "Admim")]
+        [Authorize(Roles = "Admin")]
         [HttpPost("restaurante/produto")]
         public IActionResult CriarProduto([FromBody] Produto produto)
         {
@@ -64,7 +64,7 @@ namespace ApiRestaurante.Controllers
             }
         }
 
-        [Authorize(Roles = "Admim")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("restaurante/produto/{id}")]
         public IActionResult AtualizarProduto([FromRoute] int id, [FromBody] Produto produto)
         {
@@ -89,7 +89,7 @@ namespace ApiRestaurante.Controllers
             }
         }
 
-        [Authorize(Roles = "Admim")]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("restaurante/produto/{id}")]
         public IActionResult DeletarProduto([FromRoute] int id)
         {

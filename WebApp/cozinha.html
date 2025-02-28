@@ -15,31 +15,153 @@
       <button class="btn btn-danger" onclick="logout()">Sair</button>
       <h2 class="mt-4">Pedidos para Cozinha</h2>
       <div id="pedidos" class="row"></div>
+
+      <div class="d-flex justify-content-between mt-3">
+        <button
+          id="btnAnterior"
+          class="btn btn-primary"
+          onclick="carregarPedidos(paginaAtual - 1)"
+        >
+          Anterior
+        </button>
+        <span id="paginaInfo">Página 1</span>
+        <button
+          id="btnProximo"
+          class="btn btn-primary"
+          onclick="carregarPedidos(paginaAtual + 1)"
+        >
+          Próximo
+        </button>
+      </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="WebApp/script.js"></script>
     <script>
-      $(document).ready(function () {
-        let token = localStorage.getItem("token");
-        let nivelAcesso = localStorage.getItem("nivelAcesso");
+      let paginaAtual = 1;
+      let produtos = {};
 
-        if (!token || nivelAcesso != 3) {
+      function logout() {
+        localStorage.removeItem("token");
+        localStorage.removeItem("nivelAcesso");
+        localStorage.removeItem("nomeUsuario");
+        window.location.href = "login.html";
+      }
+
+      function traduzirStatus(status) {
+        switch (status) {
+          case 1:
+            return "Novo";
+          case 2:
+            return "Em Andamento";
+          case 3:
+            return "Pronto";
+          case 4:
+            return "Entregue";
+          default:
+            return "Status Desconhecido";
+        }
+      }
+
+      function carregarProdutos() {
+        let token = localStorage.getItem("token");
+        if (!token) {
           window.location.href = "login.html";
         }
 
         $.ajax({
-          url: "http://localhost:5195/restaurante/pedidos/cozinha",
+          url: "http://localhost:5195/restaurante/produto",
+          type: "GET",
+          headers: { Authorization: "Bearer " + token },
+          success: function (data) {
+            data.forEach((produto) => {
+              produtos[produto.IdProduto] = produto;
+            });
+            carregarPedidos(paginaAtual);
+          },
+          error: function () {
+            alert("Erro ao buscar produtos.");
+          },
+        });
+      }
+
+      function carregarPedidos(pagina) {
+        if (pagina < 1) return;
+        paginaAtual = pagina;
+
+        let token = localStorage.getItem("token");
+        if (!token) {
+          window.location.href = "login.html";
+        }
+
+        $.ajax({
+          url: `http://localhost:5195/restaurante/pedidos/cozinha?page=${paginaAtual}&pageSize=5`,
           type: "GET",
           headers: { Authorization: "Bearer " + token },
           success: function (data) {
             let html = "";
             data.forEach((pedido) => {
-              html += `<div class='col-md-4'><div class='card'><div class='card-body'><h5>Pedido ${pedido.id}</h5><p>Status: ${pedido.status}</p></div></div></div>`;
+              let itensHtml = "";
+              pedido.Itens.forEach((item) => {
+                let produto = produtos[item.idProduto];
+                if (produto) {
+                  itensHtml += `<p>${item.quantidade}x ${produto.NomeProduto}</p>`;
+                }
+              });
+              html += `
+                            <div class='col-md-4'>
+                                <div class='card'>
+                                    <div class='card-body'>
+                                        <h5>Pedido ${pedido.IdPedido}</h5>
+                                        <p>Cliente: ${pedido.NomeCliente}</p>
+                                        <p>Mesa: ${pedido.NumeroMesa}</p>
+                                        <p>Status: ${traduzirStatus(
+                                          pedido.Status
+                                        )}</p>
+                                        ${itensHtml}
+                                        <button class="btn btn-warning" onclick="atualizarStatus(${
+                                          pedido.IdPedido
+                                        }, 2)">Marcar como Em Andamento</button>
+                                        <button class="btn btn-success" onclick="atualizarStatus(${
+                                          pedido.IdPedido
+                                        }, 3)">Marcar como Pronto</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
             });
             $("#pedidos").html(html);
+            $("#paginaInfo").text(`Página ${paginaAtual}`);
+          },
+          error: function () {
+            alert("Erro ao buscar pedidos da cozinha.");
           },
         });
+      }
+
+      function atualizarStatus(idPedido, novoStatus) {
+        let token = localStorage.getItem("token");
+        if (!token) {
+          window.location.href = "login.html";
+        }
+
+        $.ajax({
+          url: `http://localhost:5195/restaurante/pedido/${idPedido}/status`,
+          type: "PUT",
+          headers: { Authorization: "Bearer " + token },
+          contentType: "application/json",
+          data: JSON.stringify(novoStatus),
+          success: function () {
+            alert("Status atualizado com sucesso!");
+            carregarPedidos(paginaAtual);
+          },
+          error: function () {
+            alert("Erro ao atualizar o status do pedido.");
+          },
+        });
+      }
+
+      $(document).ready(function () {
+        carregarProdutos();
       });
     </script>
   </body>

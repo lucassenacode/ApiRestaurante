@@ -11,7 +11,8 @@
   </head>
   <body>
     <div class="container mt-5">
-      <h1 class="text-center">Login</h1>
+      <h2 class="text-center">Sistema do Restaurante</h2>
+      <h2 class="text-center">Login</h2>
       <form id="loginForm">
         <div class="mb-3">
           <label for="email" class="form-label">Email</label>
@@ -23,6 +24,16 @@
         </div>
         <button type="submit" class="btn btn-primary">Entrar</button>
       </form>
+      <h2 class="mt-5">Menu de Produtos</h2>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Preço</th>
+          </tr>
+        </thead>
+        <tbody id="menuProdutos"></tbody>
+      </table>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -46,6 +57,32 @@
             alert("Nível de acesso desconhecido!");
         }
       }
+
+      function carregarMenuProdutos() {
+        $.ajax({
+          url: "http://localhost:5195/restaurante/produto",
+          type: "GET",
+          success: function (data) {
+            let html = "";
+            data.forEach((produto) => {
+              html += `
+                <tr>
+                  <td>${produto.NomeProduto}</td>
+                  <td>R$ ${produto.Preco.toFixed(2)}</td>
+                </tr>
+              `;
+            });
+            $("#menuProdutos").html(html);
+          },
+          error: function () {
+            alert("Erro ao carregar o menu de produtos.");
+          },
+        });
+      }
+
+      $(document).ready(function () {
+        carregarMenuProdutos();
+      });
 
       $("#loginForm").submit(function (event) {
         event.preventDefault();
