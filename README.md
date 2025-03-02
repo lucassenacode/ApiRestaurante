@@ -223,7 +223,6 @@ CREATE TABLE Usuario (
 ## Como Executar o Projeto
 1. **Configurar o Banco de Dados:**
    - Criar a base de dados conforme as instruções do projeto.
-   - Executar as migrations (caso existam).
 2. **Rodar o Backend:**
    - Abrir a solução no Visual Studio.
    - Configurar a `appsettings.json` conforme o banco de dados.
